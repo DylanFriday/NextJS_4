@@ -22,7 +22,16 @@ export async function GET() {
         });
     }
     catch (exception) {
-        console.log("exception", exception.toString());
+        console.error("[api/user][GET] exception:", exception);
+        if (exception?.message === "Database connection failed") {
+            return NextResponse.json({
+                message: "Database unavailable"
+            }, {
+                status: 500,
+                headers: corsHeaders
+            })
+        }
+
         const errorMsg = exception.toString();
         return NextResponse.json({
             message: errorMsg
@@ -68,7 +77,16 @@ export async function POST(req) {
         });
     }
     catch (exception) {
-        console.log("exception", exception.toString());
+        console.error("[api/user][POST] exception:", exception);
+        if (exception?.message === "Database connection failed") {
+            return NextResponse.json({
+                message: "Database unavailable"
+            }, {
+                status: 500,
+                headers: corsHeaders
+            })
+        }
+
         const errorMsg = exception.toString();
         let displayErrorMsg = "";
         if (errorMsg.includes("duplicate")) {
